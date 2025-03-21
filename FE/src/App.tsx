@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
 import ProductDetail from '@components/ProductDetail'
+import Login from '@components/Login'
+import Signup from '@components/Signup'
+import ForgotPassword from '@components/ForgotPassword'
 import './styles/App.css'
 
 const Home: React.FC = () => {
@@ -103,6 +106,9 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products/:id" element={<ProductDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
           </Routes>
         </main>
         <Footer />
