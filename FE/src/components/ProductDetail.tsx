@@ -13,9 +13,9 @@ const ProductDetail: React.FC = () => {
     name: '아티스트 상품',
     price: 25000,
     images: [
-      'https://via.placeholder.com/600x600?text=Main',
-      'https://via.placeholder.com/600x600?text=Detail1',
-      'https://via.placeholder.com/600x600?text=Detail2',
+      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=60',
+      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=60',
+      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=60',
     ],
     description: '상품 상세 설명입니다.',
     options: ['옵션1', '옵션2', '옵션3'],

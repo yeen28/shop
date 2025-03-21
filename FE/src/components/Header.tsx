@@ -6,13 +6,29 @@ import {
   FaUser, 
   FaMapMarkerAlt,
   FaCaretDown,
-  FaSignOutAlt,
-  FaHeadset
+  FaSignOutAlt
 } from 'react-icons/fa';
+import AddressDialog from './AddressDialog';
 import './Header.css';
+
+interface Address {
+  zipCode: string;
+  address: string;
+  detailAddress: string;
+  recipient: string;
+  phone: string;
+}
 
 const Header: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAddressDialogOpen, setIsAddressDialogOpen] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+
+  const handleAddressSave = (address: Address) => {
+    setSelectedAddress(address);
+    // TODO: Save address to backend or local storage
+    console.log('Saved address:', address);
+  };
 
   return (
     <header className="header">
@@ -44,7 +60,7 @@ const Header: React.FC = () => {
                 <option value="JPY">JPY</option>
               </select>
             </div>
-            <button className="icon-button delivery-address">
+            <button className="icon-button delivery-address" onClick={() => setIsAddressDialogOpen(true)}>
               <FaMapMarkerAlt className="icon" />
               <span>배송지</span>
             </button>
@@ -52,37 +68,33 @@ const Header: React.FC = () => {
               <FaShoppingCart className="icon" />
               <span>장바구니</span>
             </Link>
-            <div className="user-actions">
-              <Link to="/login" className="icon-button login-button">
+            <div className="account-dropdown">
+              <button 
+                className="icon-button account-button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
                 <FaUser className="icon" />
-                <span>로그인</span>
-              </Link>
-              <div className="account-dropdown">
-                <button 
-                  className="icon-button account-button"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                >
-                  <FaUser className="icon" />
-                  <span>계정</span>
-                  <FaCaretDown className={`icon dropdown-icon ${isDropdownOpen ? 'open' : ''}`} />
-                </button>
-                {isDropdownOpen && (
-                  <div className="dropdown-menu">
-                    <button className="dropdown-item">
-                      <FaSignOutAlt className="icon" />
-                      <span>로그아웃</span>
-                    </button>
-                    <button className="dropdown-item">
-                      <FaHeadset className="icon" />
-                      <span>고객센터</span>
-                    </button>
-                  </div>
-                )}
-              </div>
+                <span>계정</span>
+                <FaCaretDown className={`icon dropdown-icon ${isDropdownOpen ? 'open' : ''}`} />
+              </button>
+              {isDropdownOpen && (
+                <div className="dropdown-menu">
+                  <button className="dropdown-item">
+                    <FaSignOutAlt className="icon" />
+                    <span>로그아웃</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      <AddressDialog
+        isOpen={isAddressDialogOpen}
+        onClose={() => setIsAddressDialogOpen(false)}
+        onSave={handleAddressSave}
+      />
     </header>
   );
 };
