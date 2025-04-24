@@ -34,20 +34,20 @@ const Footer: React.FC = () => {
             </div>
           </div>
           <div className="footer-business-info">
-            <h3>위버스 컴퍼니 사업자 정보</h3>
-            <p>전화번호: (+82) 1544-0790</p>
-            <p>상호: Weverse Company Inc.</p>
-            <p>대표자: 최준원</p>
-            <p>주소: 경기도 성남시 분당구 분당내곡로 131, C동 6층 (백현동, 판교테크원타워)</p>
-            <p>사업자등록번호: 716-87-01158 <a href="#">사업자정보확인</a></p>
-            <p>통신판매업 신고번호: 제 2022-성남분당A-0557 호</p>
-            <p>호스팅 서비스 사업자: Amazon Web Services, Inc., NAVER Cloud</p>
-            <p>전자우편주소: weverse@weversecompany.com</p>
+            <h3>위 컴퍼니 사업자 정보</h3>
+            <p>전화번호: (+82) 1544-xxxx</p>
+            <p>상호: Wee Company Inc.</p>
+            <p>대표자: HongGilDong</p>
+            <p>주소: 경기도 성남시 분당구</p>
+            <p>사업자등록번호: xxx-xx-xxxxx <a href="#">사업자정보확인</a></p>
+            <p>통신판매업 신고번호: 제 2025-성남분당-xxxx 호</p>
+            <p>호스팅 서비스 사업자: Web Services</p>
+            <p>전자우편주소: wee@wee.com</p>
           </div>
         </div>
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © 2024 Weverse Company Inc. or its affiliates (Weverse Japan & Weverse America Inc.) all rights reserved.
+            © 2025 Wee Company Inc.
           </p>
           <div className="footer-social">
             <a href="#"><i className="fab fa-facebook-f"></i></a>

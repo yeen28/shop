@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  FaGlobe, 
-  FaShoppingCart, 
-  FaUser, 
-  FaMapMarkerAlt,
-  FaCaretDown,
-  FaSignOutAlt
-} from 'react-icons/fa';
+import { FaGlobe, FaShoppingCart, FaUser, FaMapMarkerAlt, FaCaretDown, FaSignOutAlt, FaMusic } from 'react-icons/fa';
 import AddressDialog from './AddressDialog';
 import './Header.css';
 
@@ -35,7 +28,8 @@ const Header: React.FC = () => {
       <div className="header-top">
         <div className="header-left">
           <Link to="/" className="logo">
-            <img src="/logo.png" alt="Weverse Shop" />
+            <FaMusic className="icon" />
+            <label>Wee Shop</label>
           </Link>
           <nav className="main-nav">
             <Link to="/" className="nav-link">홈</Link>
