@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/wee
+  profiles:
+    active: dev
+    default: dev
+  config:
+    import:
+      - classpath:/application.yml     # application.yml을 먼저 로드
+      - optional:classpath:/override.yml        # 그다음 override.yml 로드
+      - optional:classpath:/application-${spring.profiles.active}.yml
+  liquibase:
+    enabled: false
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: wee
+
+# export SPRING_PROFILES_ACTIVE=dev
+# ./gradlew :api:bootRun
+# 또는 Gradle 실행 시 시스템 프로퍼티로 전달
+# ./gradlew :api:bootRun -Dspring.profiles.active=dev

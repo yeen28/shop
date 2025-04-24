@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- User 테이블 생성 -->
+    <include file="classpath:db/changelog/changes/create-user-tables-changelog-250425.xml"/>
+
+    <!-- DM 테이블들 생성 -->
+    <include file="classpath:db/changelog/changes/250401-create-dm-tables-changelog.xml"/>
+</databaseChangeLog>
