@@ -1,8 +1,8 @@
 package com.shop.api.controller;
 
-import com.shop.auth.model.LoginModel;
 import com.shop.auth.model.UserInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,12 +17,11 @@ public class LoginController {
 	private final LoginService loginService;
 
 	@Operation(summary = "Attempt Login")
+	@Parameter(name = "userInfoDto", example = "{\"email\":\"wee@email.com\",\"password\":\"password\"}")
 	@PostMapping("/login")
-	public LoginModel login(@RequestBody UserInfoDto userInfoDto) {
+	public String login(@RequestBody UserInfoDto userInfoDto) {
 		try {
-			String accessToken = loginService.login(userInfoDto);
-			log.info("access token - {}", accessToken);
-			return new LoginModel(1L, userInfoDto.getEmail());
+			return loginService.login(userInfoDto);
 
 		} catch (Exception e) {
 			// TODO Exception 공통 로직 추가하기

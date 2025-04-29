@@ -5,11 +5,13 @@ import com.shop.auth.model.UserInfoDto;
 import com.shop.auth.repository.UserInfoRepository;
 import com.shop.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class LoginService {
@@ -26,11 +28,11 @@ public class LoginService {
 
 		UserInfo userInfo = userInfoRepository.findByEmail(email);
 		if (userInfo == null) {
-			throw new UsernameNotFoundException("Not Found User");
+			throw new UsernameNotFoundException(String.format("Not Found User - %s", email));
 		}
 
 		if (!passwordEncoder.matches(userInfoDto.getPassword(), userInfo.getPassword())) {
-			throw new BadCredentialsException("Not Matched Password");
+			throw new BadCredentialsException(String.format("Not Matched Password - email:%s", email));
 		}
 
 		return jwtUtil.generateAccessToken(userInfo);
