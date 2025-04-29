@@ -12,11 +12,18 @@
             <column name="email" type="varchar(100)">
                 <constraints unique="true" nullable="false"/>
             </column>
+            <column name="password" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
             <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <addAutoIncrement tableName="user_info" columnName="id" columnDataType="int"/>
         <addDefaultValue tableName="user_info" columnName="created_at" defaultValueDate="CURRENT_TIMESTAMP"/>
+        <addDefaultValue tableName="user_info" columnName="last_modified_at" defaultValueDate="CURRENT_TIMESTAMP"/>
     </changeSet>
 </databaseChangeLog>

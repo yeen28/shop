@@ -10,7 +10,7 @@ spring:
       - optional:classpath:/override.yml        # 그다음 override.yml 로드
       - optional:classpath:/application-${spring.profiles.active}.yml
   liquibase:
-    enabled: false
+    enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
     default-schema: wee
 

@@ -1,5 +1,6 @@
 package com.shop.auth.model;
 
+import com.shop.auth.domain.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,11 +12,11 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
-	private final UserInfoDto userInfoDto;
+	private final UserInfo userInfo;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<String> roles = List.of(String.valueOf(userInfoDto.getRole()));
+		List<String> roles = List.of(String.valueOf(userInfo.getRole()));
 		return roles.stream()
 				.map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList());

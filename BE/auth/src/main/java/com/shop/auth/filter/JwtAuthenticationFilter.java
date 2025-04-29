@@ -1,7 +1,7 @@
 package com.shop.auth.filter;
 
+import com.shop.auth.domain.UserInfo;
 import com.shop.auth.model.CustomUserDetails;
-import com.shop.auth.model.UserInfoDto;
 import com.shop.auth.repository.UserInfoRepository;
 import com.shop.auth.util.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -37,10 +37,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // OncePerRe
 
 			// Validate JWT
 			if (jwtUtil.validateToken(token)) {
-				UserInfoDto userInfoDto = UserInfoDto.of(userInfoRepository.findByEmail(email));
+				UserInfo userInfo = userInfoRepository.findByEmail(email);
 
 				// if user matches token, generate userDetails.
-				UserDetails userDetails = new CustomUserDetails(userInfoDto);
+				UserDetails userDetails = new CustomUserDetails(userInfo);
 
 				// UserDetails, password, role -> Generate access authorization tokens
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

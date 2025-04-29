@@ -1,6 +1,6 @@
 package com.shop.auth.util;
 
-import com.shop.auth.model.UserInfoDto;
+import com.shop.auth.domain.UserInfo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -31,7 +31,7 @@ public class JwtUtil {
 	 * Generate Access Token
 	 * @return Access Token String
 	 */
-	public String generateAccessToken(UserInfoDto userInfo) {
+	public String generateAccessToken(UserInfo userInfo) {
 		// Generate JWT
 		Claims claims = Jwts.claims();
 		claims.put("email", userInfo.getEmail());

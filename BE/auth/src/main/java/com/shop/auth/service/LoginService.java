@@ -3,7 +3,6 @@ package com.shop.auth.service;
 import com.shop.auth.domain.UserInfo;
 import com.shop.auth.model.UserInfoDto;
 import com.shop.auth.repository.UserInfoRepository;
-import com.shop.auth.type.RoleType;
 import com.shop.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,12 +33,11 @@ public class LoginService {
 			throw new BadCredentialsException("Not Matched Password");
 		}
 
-		return jwtUtil.generateAccessToken(userInfoDto);
+		return jwtUtil.generateAccessToken(userInfo);
 	}
 
 	public void save(UserInfoDto userInfoDto) {
-		userInfoDto.setPassword(passwordEncoder.encode(userInfoDto.getPassword()));
-		userInfoDto.setRole(RoleType.ROLE_USER);
-		userInfoRepository.save(UserInfo.of(userInfoDto));
+		String encodePassword = passwordEncoder.encode(userInfoDto.getPassword());
+		userInfoRepository.save(UserInfo.byEncodePassword(userInfoDto, encodePassword));
 	}
 }

@@ -1,5 +1,6 @@
 package com.shop.auth.util;
 
+import com.shop.auth.domain.UserInfo;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import nl.altindag.log.LogCaptor;
@@ -37,10 +38,11 @@ class JwtUtilTest {
 		@DisplayName("정상적으로 AccessToken이 생성된다.")
 		void generateAccessToken_success() {
 			// given
-			UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password", RoleType.ROLE_USER);
+			UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password");
+			UserInfo userInfo = UserInfo.of(userInfoDto);
 
 			// when
-			String token = jwtUtil.generateAccessToken(userInfoDto);
+			String token = jwtUtil.generateAccessToken(userInfo);
 
 			// then
 			assertThat(token).isNotBlank();
@@ -53,7 +55,7 @@ class JwtUtilTest {
 					.getBody();
 
 			assertThat(claims.get("email", String.class)).isEqualTo(userInfoDto.getEmail());
-			assertThat(claims.get("role", String.class)).isEqualTo(userInfoDto.getRole().name());
+			assertThat(claims.get("role", String.class)).isEqualTo(userInfo.getRole().getValue());
 		}
 	}
 
@@ -65,8 +67,8 @@ class JwtUtilTest {
 		@DisplayName("정상적인 토큰이면 true를 반환한다.")
 		void validateToken_success() {
 			// given
-			UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password", RoleType.ROLE_USER);
-			String token = jwtUtil.generateAccessToken(userInfoDto);
+			UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password");
+			String token = jwtUtil.generateAccessToken(UserInfo.of(userInfoDto));
 
 			// when
 			boolean isValid = jwtUtil.validateToken(token);
@@ -101,8 +103,8 @@ class JwtUtilTest {
 
 		// given - 아주 짧은 만료 시간을 가진 토큰 생성
 		JwtUtil shortLivedJwtUtil = new JwtUtil(SECRET, 1L); // 1초만 유효
-		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password", RoleType.ROLE_USER);
-		String token = shortLivedJwtUtil.generateAccessToken(userInfoDto);
+		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password");
+		String token = shortLivedJwtUtil.generateAccessToken(UserInfo.of(userInfoDto));
 
 		// sleep으로 만료 시간 지나게 함
 		try {
@@ -125,8 +127,8 @@ class JwtUtilTest {
 	@DisplayName("AccessToken에 id와 role이 정확히 저장된다.")
 	void generateAccessToken_containsClaims() {
 		// given
-		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password", RoleType.ROLE_USER);
-		String token = jwtUtil.generateAccessToken(userInfoDto);
+		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password");
+		String token = jwtUtil.generateAccessToken(UserInfo.of(userInfoDto));
 
 		// when
 		Claims claims = Jwts.parserBuilder()

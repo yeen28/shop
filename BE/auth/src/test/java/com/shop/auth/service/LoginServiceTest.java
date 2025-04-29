@@ -41,12 +41,12 @@ class LoginServiceTest {
 	@DisplayName("로그인 성공 시 AccessToken 반환")
 	void loginTest() {
 		// given
-		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password123", RoleType.ROLE_USER);
+		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password123");
 		UserInfo userInfo = UserInfo.of(userInfoDto);
 
 		when(userInfoRepository.findByEmail(userInfoDto.getEmail())).thenReturn(userInfo);
 		when(passwordEncoder.matches(userInfoDto.getPassword(), userInfo.getPassword())).thenReturn(true);
-		when(jwtUtil.generateAccessToken(userInfoDto)).thenReturn("mocked-access-token");
+		when(jwtUtil.generateAccessToken(userInfo)).thenReturn("mocked-access-token");
 
 		// when
 		String accessToken = loginService.login(userInfoDto);
@@ -61,7 +61,7 @@ class LoginServiceTest {
 	void login_fail_usernameNotFound() {
 		// given
 		String email = "wrongEmail@example.com";
-		UserInfoDto wrongUserInfoDto = new UserInfoDto(email, "wrongPassword", RoleType.ROLE_USER);
+		UserInfoDto wrongUserInfoDto = new UserInfoDto(email, "wrongPassword");
 
 		when(userInfoRepository.findByEmail(email)).thenReturn(null);
 
@@ -74,8 +74,8 @@ class LoginServiceTest {
 	void login_fail_badCredentials() {
 		// given
 		String email = "test@example.com";
-		UserInfoDto wrongUserInfoDto = new UserInfoDto(email, "wrongPassword", RoleType.ROLE_USER);
-		UserInfoDto dbUserInfoDto = new UserInfoDto(email, "dbPassword", RoleType.ROLE_USER);
+		UserInfoDto wrongUserInfoDto = new UserInfoDto(email, "wrongPassword");
+		UserInfoDto dbUserInfoDto = new UserInfoDto(email, "dbPassword");
 		UserInfo dbUserInfo = UserInfo.of(dbUserInfoDto);
 
 		when(userInfoRepository.findByEmail(email)).thenReturn(dbUserInfo);
@@ -91,7 +91,7 @@ class LoginServiceTest {
 		String email = "test@example.com";
 		String plainPassword = "plainPassword";
 		String encodedPassword = "encodedPassword";
-		UserInfoDto userInfoDto = new UserInfoDto(email, plainPassword, RoleType.ROLE_USER);
+		UserInfoDto userInfoDto = new UserInfoDto(email, plainPassword);
 
 		when(passwordEncoder.encode(plainPassword)).thenReturn(encodedPassword);
 
