@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: 'jdbc:h2:mem:test' # In-Memory Mode
+    #url: 'jdbc:h2:~/test'  # Embedded Mode
+    username: root
+    password: password
+
+jwt:
+  expiration-time: 86400000 # 1 Day
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK

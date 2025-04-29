@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/wee
+    # ! 아래 3줄이 있어야 DB에 접속할 수 있고 서버가 구동될 수 있습니다.
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  liquibase:
+    enabled: false
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: wee
+
+jwt:
+  expiration-time: 86400000 # 1 Day
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK

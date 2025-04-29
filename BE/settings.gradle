@@ -2,3 +2,4 @@ rootProject.name = 'shop'
 
 include 'common'
 include 'api'
+include 'auth'

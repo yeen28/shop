@@ -1,0 +1,45 @@
+package com.shop.auth.service;
+
+import com.shop.auth.domain.UserInfo;
+import com.shop.auth.model.UserInfoDto;
+import com.shop.auth.repository.UserInfoRepository;
+import com.shop.auth.type.RoleType;
+import com.shop.auth.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@RequiredArgsConstructor
+@Service
+public class LoginService {
+	private final UserInfoRepository userInfoRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final JwtUtil jwtUtil;
+
+	/**
+	 * @param userInfoDto
+	 * @return access token
+	 */
+	public String login(UserInfoDto userInfoDto) {
+		String email = userInfoDto.getEmail();
+
+		UserInfo userInfo = userInfoRepository.findByEmail(email);
+		if (userInfo == null) {
+			throw new UsernameNotFoundException("Not Found User");
+		}
+
+		if (!passwordEncoder.matches(userInfoDto.getPassword(), userInfo.getPassword())) {
+			throw new BadCredentialsException("Not Matched Password");
+		}
+
+		return jwtUtil.generateAccessToken(userInfoDto);
+	}
+
+	public void save(UserInfoDto userInfoDto) {
+		userInfoDto.setPassword(passwordEncoder.encode(userInfoDto.getPassword()));
+		userInfoDto.setRole(RoleType.ROLE_USER);
+		userInfoRepository.save(UserInfo.of(userInfoDto));
+	}
+}
