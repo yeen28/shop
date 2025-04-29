@@ -2,15 +2,23 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GoogleIcon, KakaoIcon, NaverIcon } from './icons/SocialIcons';
 import './Login.css';
+import postLogin from '@/common/api/login/postLogin';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement login logic
     console.log('Login attempt:', { email, password });
+    try {
+      const data = postLogin(email, password);
+      console.log('로그인 성공:', data);
+      // 토큰 저장하거나 라우팅 처리
+
+    } catch (err) {
+      console.log(`오류 발생: ${err}`);
+    }
   };
 
   const handleSocialLogin = (provider: string) => {
