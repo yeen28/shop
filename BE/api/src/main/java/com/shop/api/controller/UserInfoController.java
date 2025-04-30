@@ -49,4 +49,10 @@ public class UserInfoController {
 		userInfoService.signup(dto);
 		return BaseResponse.success();
 	}
+
+	@Operation(summary = "Get All Users")
+	@GetMapping("/admin/users")
+	public BaseResponse getAllUsers() {
+		return BaseResponse.success();
+	}
 }

@@ -30,13 +30,13 @@ import java.io.IOException;
 public class SecurityConfig {
 	private final JwtUtil jwtUtil;
 	private final UserInfoRepository userInfoRepository;
-	private static final String[] AUTH_WHITELIST = {
-			"/**"
+	private static final String[] AUTH_ADMIN_LIST = {
+			"/admin/**",
 	};
 
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http
+		return http
 				// CSRF, CORS
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(Customizer.withDefaults())
@@ -65,12 +65,10 @@ public class SecurityConfig {
 
 				// Permission rules
 				.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-						.requestMatchers(AUTH_WHITELIST).permitAll()
-						// Allows authentication for all paths because it uses @PreAuthorization
+						.requestMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
 						.anyRequest().permitAll()
-				);
-
-		return http.build();
+				)
+				.build();
 	}
 
 	@Bean

@@ -4,6 +4,7 @@ import com.shop.auth.common.response.ErrorCode;
 import com.shop.auth.domain.UserInfo;
 import com.shop.auth.model.SignupUserInfoDto;
 import com.shop.auth.model.UserInfoDto;
+import com.shop.auth.model.UserInfoModel;
 import com.shop.auth.repository.UserInfoRepository;
 import com.shop.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,5 +52,9 @@ public class UserInfoService {
 				encodePassword,
 				signupDto.roleType()
 		));
+	}
+
+	public List<UserInfoModel> getAllUsers() {
+		return UserInfoModel.of(userInfoRepository.findAll());
 	}
 }
