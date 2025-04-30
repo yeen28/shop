@@ -1,6 +1,7 @@
 package com.shop.auth.service;
 
 import com.shop.auth.domain.UserInfo;
+import com.shop.auth.model.SignupUserInfoDto;
 import com.shop.auth.model.UserInfoDto;
 import com.shop.auth.repository.UserInfoRepository;
 import com.shop.auth.type.RoleType;
@@ -27,7 +28,7 @@ void setUp() {
 }
  */
 @ExtendWith(MockitoExtension.class)
-class LoginServiceTest {
+class UserInfoServiceTest {
 	@Mock
 	private UserInfoRepository userInfoRepository;
 	@Mock
@@ -35,17 +36,17 @@ class LoginServiceTest {
 	@Mock
 	private JwtUtil jwtUtil;
 	@InjectMocks
-	private LoginService loginService;
+	private UserInfoService loginService;
 
 	@Test
 	@DisplayName("로그인 성공 시 AccessToken 반환")
-	void loginTest() {
+	void login_test() {
 		// given
 		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password123");
-		UserInfo userInfo = UserInfo.of(userInfoDto);
+		UserInfo userInfo = UserInfo.of(userInfoDto.email(), passwordEncoder.encode(userInfoDto.password()), RoleType.ROLE_USER);
 
-		when(userInfoRepository.findByEmail(userInfoDto.getEmail())).thenReturn(userInfo);
-		when(passwordEncoder.matches(userInfoDto.getPassword(), userInfo.getPassword())).thenReturn(true);
+		when(userInfoRepository.findByEmail(userInfoDto.email())).thenReturn(userInfo);
+		when(passwordEncoder.matches(userInfoDto.password(), userInfo.getPassword())).thenReturn(true);
 		when(jwtUtil.generateAccessToken(userInfo)).thenReturn("mocked-access-token");
 
 		// when
@@ -76,7 +77,7 @@ class LoginServiceTest {
 		String email = "test@example.com";
 		UserInfoDto wrongUserInfoDto = new UserInfoDto(email, "wrongPassword");
 		UserInfoDto dbUserInfoDto = new UserInfoDto(email, "dbPassword");
-		UserInfo dbUserInfo = UserInfo.of(dbUserInfoDto);
+		UserInfo dbUserInfo = UserInfo.of(dbUserInfoDto.email(), passwordEncoder.encode(dbUserInfoDto.password()), RoleType.ROLE_USER);
 
 		when(userInfoRepository.findByEmail(email)).thenReturn(dbUserInfo);
 
@@ -86,17 +87,17 @@ class LoginServiceTest {
 
 	@Test
 	@DisplayName("회원 저장: 비밀번호 암호화 및 ROLE_USER 설정 후 저장됨")
-	void saveUserInfo_success() {
+	void signup_userInfo_success() {
 		// given
 		String email = "test@example.com";
 		String plainPassword = "plainPassword";
 		String encodedPassword = "encodedPassword";
-		UserInfoDto userInfoDto = new UserInfoDto(email, plainPassword);
+		SignupUserInfoDto dto = new SignupUserInfoDto(email, plainPassword, RoleType.ROLE_USER);
 
 		when(passwordEncoder.encode(plainPassword)).thenReturn(encodedPassword);
 
 		// when
-		loginService.save(userInfoDto);
+		loginService.signup(dto);
 
 		// then
 		// ArgumentCaptor로 userInfoRepository.save()에 전달된 UserInfo 객체를 검증

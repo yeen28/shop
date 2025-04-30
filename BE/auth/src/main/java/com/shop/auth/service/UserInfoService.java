@@ -1,6 +1,8 @@
 package com.shop.auth.service;
 
+import com.shop.auth.common.response.ErrorCode;
 import com.shop.auth.domain.UserInfo;
+import com.shop.auth.model.SignupUserInfoDto;
 import com.shop.auth.model.UserInfoDto;
 import com.shop.auth.repository.UserInfoRepository;
 import com.shop.auth.util.JwtUtil;
@@ -10,11 +12,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class LoginService {
+public class UserInfoService {
 	private final UserInfoRepository userInfoRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtUtil jwtUtil;
@@ -24,22 +27,27 @@ public class LoginService {
 	 * @return access token
 	 */
 	public String login(UserInfoDto userInfoDto) {
-		String email = userInfoDto.getEmail();
+		String email = userInfoDto.email();
 
 		UserInfo userInfo = userInfoRepository.findByEmail(email);
 		if (userInfo == null) {
-			throw new UsernameNotFoundException(String.format("Not Found User - %s", email));
+			throw new UsernameNotFoundException(String.format("%s - email:%s", ErrorCode.ENTITY_NOT_FOUND.getMessage(), email));
 		}
 
-		if (!passwordEncoder.matches(userInfoDto.getPassword(), userInfo.getPassword())) {
+		if (!passwordEncoder.matches(userInfoDto.password(), userInfo.getPassword())) {
 			throw new BadCredentialsException(String.format("Not Matched Password - email:%s", email));
 		}
 
 		return jwtUtil.generateAccessToken(userInfo);
 	}
 
-	public void save(UserInfoDto userInfoDto) {
-		String encodePassword = passwordEncoder.encode(userInfoDto.getPassword());
-		userInfoRepository.save(UserInfo.byEncodePassword(userInfoDto, encodePassword));
+	@Transactional
+	public void signup(SignupUserInfoDto signupDto) {
+		String encodePassword = passwordEncoder.encode(signupDto.password());
+		userInfoRepository.save(UserInfo.of(
+				signupDto.email(),
+				encodePassword,
+				signupDto.roleType()
+		));
 	}
 }

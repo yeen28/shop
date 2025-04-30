@@ -1,17 +1,15 @@
 package com.shop.auth.type;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public enum RoleType {
 	ROLE_USER("ROLE_USER"),
 	ROLE_MANAGER("ROLE_MANAGER"),
 	ROLE_ADMIN("ROLE_ADMIN");
 
 	@Getter private final String value;
-
-	RoleType(String value) {
-		this.value = value;
-	}
 
 	/**
 	 * 문자열을 enum으로 변환

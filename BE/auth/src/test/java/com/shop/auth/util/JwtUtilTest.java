@@ -14,13 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.slf4j.Logger;
 import java.util.Base64;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class JwtUtilTest {
-	@Mock private Logger logger;
 	private JwtUtil jwtUtil;
 	private static final String SECRET = "c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK";
 	private static final long EXPIRATION_TIME = 3600L; // 1시간
@@ -39,7 +36,7 @@ class JwtUtilTest {
 		void generateAccessToken_success() {
 			// given
 			UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password");
-			UserInfo userInfo = UserInfo.of(userInfoDto);
+			UserInfo userInfo = UserInfo.of(userInfoDto.email(), "encodedPassword", null);
 
 			// when
 			String token = jwtUtil.generateAccessToken(userInfo);
@@ -54,7 +51,7 @@ class JwtUtilTest {
 					.parseClaimsJws(token)
 					.getBody();
 
-			assertThat(claims.get("email", String.class)).isEqualTo(userInfoDto.getEmail());
+			assertThat(claims.get("email", String.class)).isEqualTo(userInfoDto.email());
 			assertThat(claims.get("role", String.class)).isEqualTo(userInfo.getRole().getValue());
 		}
 	}
@@ -68,7 +65,7 @@ class JwtUtilTest {
 		void validateToken_success() {
 			// given
 			UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password");
-			String token = jwtUtil.generateAccessToken(UserInfo.of(userInfoDto));
+			String token = jwtUtil.generateAccessToken(UserInfo.of(userInfoDto.email(), "encodedPassword", null));
 
 			// when
 			boolean isValid = jwtUtil.validateToken(token);
@@ -104,7 +101,7 @@ class JwtUtilTest {
 		// given - 아주 짧은 만료 시간을 가진 토큰 생성
 		JwtUtil shortLivedJwtUtil = new JwtUtil(SECRET, 1L); // 1초만 유효
 		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password");
-		String token = shortLivedJwtUtil.generateAccessToken(UserInfo.of(userInfoDto));
+		String token = shortLivedJwtUtil.generateAccessToken(UserInfo.of(userInfoDto.email(), "encodedPassword", null));
 
 		// sleep으로 만료 시간 지나게 함
 		try {
@@ -128,7 +125,7 @@ class JwtUtilTest {
 	void generateAccessToken_containsClaims() {
 		// given
 		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password");
-		String token = jwtUtil.generateAccessToken(UserInfo.of(userInfoDto));
+		String token = jwtUtil.generateAccessToken(UserInfo.of(userInfoDto.email(), "encodedPassword", null));
 
 		// when
 		Claims claims = Jwts.parserBuilder()
