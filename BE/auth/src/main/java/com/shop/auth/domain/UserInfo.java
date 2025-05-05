@@ -1,6 +1,5 @@
 package com.shop.auth.domain;
 
-import com.shop.auth.model.UserInfoDto;
 import com.shop.auth.type.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
