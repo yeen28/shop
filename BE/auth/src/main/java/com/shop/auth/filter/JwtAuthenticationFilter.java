@@ -1,9 +1,9 @@
 package com.shop.auth.filter;
 
-import com.shop.auth.domain.UserInfo;
+import com.shop.core.domain.UserInfo;
 import com.shop.auth.model.CustomUserDetails;
-import com.shop.auth.repository.UserInfoRepository;
-import com.shop.auth.util.JwtUtil;
+import com.shop.core.repository.UserInfoRepository;
+import com.shop.common.auth.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

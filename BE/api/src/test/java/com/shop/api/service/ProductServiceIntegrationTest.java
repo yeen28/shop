@@ -1,8 +1,8 @@
 package com.shop.api.service;
 
-import com.shop.common.model.ProductModel;
-import com.shop.common.domain.Product;
-import com.shop.api.repository.ProductRepository;
+import com.shop.api.model.ProductModel;
+import com.shop.core.domain.Product;
+import com.shop.core.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

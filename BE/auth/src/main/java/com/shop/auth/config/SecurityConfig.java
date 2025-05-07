@@ -1,8 +1,8 @@
 package com.shop.auth.config;
 
 import com.shop.auth.filter.JwtAuthenticationFilter;
-import com.shop.auth.repository.UserInfoRepository;
-import com.shop.auth.util.JwtUtil;
+import com.shop.core.repository.UserInfoRepository;
+import com.shop.common.auth.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

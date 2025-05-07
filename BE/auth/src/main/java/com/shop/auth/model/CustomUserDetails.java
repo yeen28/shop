@@ -1,6 +1,6 @@
 package com.shop.auth.model;
 
-import com.shop.auth.domain.UserInfo;
+import com.shop.core.domain.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

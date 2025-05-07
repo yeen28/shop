@@ -15,7 +15,8 @@ repositories {
 }
 
 dependencies {
-    implementation project(':common') // common 모듈에 의존성 추가
+    implementation project(':common')
+    implementation project(':core')
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
@@ -34,7 +35,6 @@ dependencies {
 
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.github.hakky54:logcaptor:2.11.0'
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -1,5 +1,5 @@
 plugins {
-    id 'java-library' // 공통 라이브러리 모듈이므로 'java-library' 플러그인 사용
+    id 'java' // 기본 Java 플러그인
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
 }
@@ -18,6 +18,8 @@ repositories {
 }
 
 dependencies {
+    implementation project(':common')
+
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
@@ -47,8 +49,6 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
 
     runtimeOnly 'com.h2database:h2'
-
-    testImplementation 'io.github.hakky54:logcaptor:2.11.0'
 }
 
 tasks.named('test') {

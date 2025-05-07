@@ -1,9 +1,9 @@
 package com.shop.api.controller;
 
-import com.shop.auth.common.response.BaseResponse;
-import com.shop.auth.common.response.ErrorCode;
-import com.shop.auth.model.SignupUserInfoDto;
-import com.shop.auth.model.UserInfoDto;
+import com.shop.common.response.BaseResponse;
+import com.shop.common.response.ErrorCode;
+import com.shop.core.model.SignupUserInfoDto;
+import com.shop.core.model.UserInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.shop.auth.service.UserInfoService;
+import com.shop.core.service.UserInfoService;
 
 @Slf4j
 @RestController
