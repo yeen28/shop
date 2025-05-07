@@ -1,5 +1,6 @@
 package com.shop.core.service;
 
+import com.shop.common.CookieUtils;
 import com.shop.common.response.ErrorCode;
 import com.shop.core.domain.UserInfo;
 import com.shop.core.model.SignupUserInfoDto;
@@ -14,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Slf4j
@@ -31,14 +31,19 @@ public class UserInfoService {
 	 */
 	public String login(UserInfoDto userInfoDto) {
 		String email = userInfoDto.email();
-
 		UserInfo userInfo = userInfoRepository.findByEmail(email);
 		if (userInfo == null) {
 			throw new UsernameNotFoundException(String.format("%s - email:%s", ErrorCode.ENTITY_NOT_FOUND.getMessage(), email));
 		}
 
-		if (!passwordEncoder.matches(userInfoDto.password(), userInfo.getPassword())) {
-			throw new BadCredentialsException(String.format("Not Matched Password - email:%s", email));
+		String accessToken = getAccessToken(userInfoDto.password(), userInfo);
+		CookieUtils.setCookie("login", accessToken);
+		return accessToken;
+	}
+
+	protected String getAccessToken(final String inputPw, UserInfo userInfo) {
+		if (!passwordEncoder.matches(inputPw, userInfo.getPassword())) {
+			throw new BadCredentialsException(String.format("Not Matched Password - email:%s", userInfo.getEmail()));
 		}
 
 		return jwtUtil.generateAccessToken(userInfo.getEmail(), userInfo.getRole());

@@ -1,5 +1,6 @@
 package com.shop.core.service;
 
+import com.shop.common.CookieUtils;
 import com.shop.core.domain.UserInfo;
 import com.shop.core.model.SignupUserInfoDto;
 import com.shop.core.model.UserInfoDto;
@@ -9,9 +10,7 @@ import com.shop.common.auth.util.JwtUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,21 +35,46 @@ class UserInfoServiceTest {
 	@Mock
 	private JwtUtil jwtUtil;
 	@InjectMocks
-	private UserInfoService loginService;
+	private UserInfoService userInfoService;
 
 	@Test
-	@DisplayName("로그인 성공 시 AccessToken 반환")
+	@DisplayName("로그인 성공 시 사용자 정보 조회 성공")
 	void login_test() {
 		// given
 		UserInfoDto userInfoDto = new UserInfoDto("test@example.com", "password123");
 		UserInfo userInfo = UserInfo.of(userInfoDto.email(), passwordEncoder.encode(userInfoDto.password()), RoleType.ROLE_USER);
 
 		when(userInfoRepository.findByEmail(userInfoDto.email())).thenReturn(userInfo);
-		when(passwordEncoder.matches(userInfoDto.password(), userInfo.getPassword())).thenReturn(true);
+
+		// getAccessToken은 내부 메서드이므로 spy 사용
+		UserInfoService spyUserInfoService = Mockito.spy(userInfoService);
+		doReturn("mocked-access-token").when(spyUserInfoService).getAccessToken(anyString(), any(UserInfo.class));
+
+		// MockedStatic< T > 객체는 AutoCloseable 인터페이스를 구현
+		try (MockedStatic<CookieUtils> mockedStatic = mockStatic(CookieUtils.class)) {
+			// when
+			String accessToken = spyUserInfoService.login(userInfoDto);
+
+			// then
+			assertNotNull(accessToken);
+			assertEquals("mocked-access-token", accessToken);
+			mockedStatic.verify(() -> CookieUtils.setCookie("login", accessToken));
+		}
+	}
+
+	@Test
+	@DisplayName("로그인 성공 시 AccessToken 반환")
+	void getAccessToken_test() {
+		// given
+		String dtoEmail = "test@example.com";
+		String dtoPassword = "password123";
+		UserInfo userInfo = UserInfo.of(dtoEmail, passwordEncoder.encode(dtoPassword), RoleType.ROLE_USER);
+
+		when(passwordEncoder.matches(dtoPassword, userInfo.getPassword())).thenReturn(true);
 		when(jwtUtil.generateAccessToken(userInfo.getEmail(), userInfo.getRole())).thenReturn("mocked-access-token");
 
 		// when
-		String accessToken = loginService.login(userInfoDto);
+		String accessToken = userInfoService.getAccessToken(dtoPassword, userInfo);
 
 		// then
 		assertNotNull(accessToken);
@@ -67,7 +91,7 @@ class UserInfoServiceTest {
 		when(userInfoRepository.findByEmail(email)).thenReturn(null);
 
 		// when & then
-		assertThrows(UsernameNotFoundException.class, () -> loginService.login(wrongUserInfoDto));
+		assertThrows(UsernameNotFoundException.class, () -> userInfoService.login(wrongUserInfoDto));
 	}
 
 	@Test
@@ -75,14 +99,12 @@ class UserInfoServiceTest {
 	void login_fail_badCredentials() {
 		// given
 		String email = "test@example.com";
-		UserInfoDto wrongUserInfoDto = new UserInfoDto(email, "wrongPassword");
-		UserInfoDto dbUserInfoDto = new UserInfoDto(email, "dbPassword");
-		UserInfo dbUserInfo = UserInfo.of(dbUserInfoDto.email(), passwordEncoder.encode(dbUserInfoDto.password()), RoleType.ROLE_USER);
-
-		when(userInfoRepository.findByEmail(email)).thenReturn(dbUserInfo);
+		String dtoPassword = "wrongPassword";
+		String dbPassword = "dbPassword";
+		UserInfo dbUserInfo = UserInfo.of(email, passwordEncoder.encode(dbPassword), RoleType.ROLE_USER);
 
 		// when & then
-		assertThrows(BadCredentialsException.class, () -> loginService.login(wrongUserInfoDto));
+		assertThrows(BadCredentialsException.class, () -> userInfoService.getAccessToken(dtoPassword, dbUserInfo));
 	}
 
 	@Test
@@ -97,7 +119,7 @@ class UserInfoServiceTest {
 		when(passwordEncoder.encode(plainPassword)).thenReturn(encodedPassword);
 
 		// when
-		loginService.signup(dto);
+		userInfoService.signup(dto);
 
 		// then
 		// ArgumentCaptor로 userInfoRepository.save()에 전달된 UserInfo 객체를 검증
